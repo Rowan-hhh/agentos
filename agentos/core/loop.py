@@ -46,13 +46,18 @@ class AgentOS:
             if action.type == "Execute_Test" and "exit_code=" in obs:
                 m = re.search(r"exit_code=(-?\d+)", obs)
                 if m and int(m.group(1)) != 0:
+                    stdout = (
+                        obs.split("stdout:\n", 1)[1].split("\nstderr:", 1)[0]
+                        if "stdout:\n" in obs
+                        else ""
+                    )
                     stderr = (
                         obs.split("stderr:\n", 1)[1]
                         if "stderr:\n" in obs
                         else ""
                     )
                     should_retry = self._feedback.process(
-                        state, int(m.group(1)), stderr
+                        state, int(m.group(1)), stdout + "\n" + stderr
                     )
                     if should_retry:
                         state.history.append(
