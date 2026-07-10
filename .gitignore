@@ -1,1 +1,4 @@
+__pycache__/
+*.pyc
+.env
 ms_deploy.json

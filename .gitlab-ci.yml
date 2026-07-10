@@ -1,0 +1,6 @@
+unit-test:
+  image: python:3.12-slim
+  before_script:
+    - pip install --no-cache-dir . pytest
+  script:
+    - python -m pytest tests/ -v -k "not integration"
