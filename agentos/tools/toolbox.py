@@ -17,7 +17,8 @@ class Toolbox:
             return self._write.execute(action.params)
         elif action.type == "Execute_Test":
             result = self._test.execute(action.params)
-            return f"exit_code={result['exit_code']}\nstdout:\n{result['stdout']}\nstderr:\n{result['stderr']}"
+            stderr = result['stderr'] or (result['stdout'] if result['exit_code'] != 0 else "")
+            return f"exit_code={result['exit_code']}\nstdout:\n{result['stdout']}\nstderr:\n{stderr}"
         elif action.type == "Stop":
             return "STOP"
         else:
