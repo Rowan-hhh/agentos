@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "agentos"
+version = "0.1.0"
+description = "Coding Agent Harness — AI4SE final project"
+requires-python = ">=3.12"
+dependencies = [
+    "python-dotenv>=1.0",
+    "openai>=1.0",
+]
+
+[project.scripts]
+agentos = "agentos.main:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
