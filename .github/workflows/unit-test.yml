@@ -1,0 +1,17 @@
+name: CI Pipeline
+
+on: [push] # 每次 push 都会触发
+
+jobs:
+  unit-test: 
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.12-slim # 对应你原本的 image
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Install dependencies & run tests
+        run: |
+          pip install --no-cache-dir . pytest
+          python -m pytest tests/ -v -k "not integration"
