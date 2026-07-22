@@ -42,7 +42,7 @@ class AgentOS:
             # 2. 物理防复读拦截器（彻底杜绝小模型无限读同一个文件）
             if len(state.trajectory) > 0:
                 last_act = state.trajectory[-1].action
-                if action.type == last_act.type and action.params == last_act.params:
+                if action.type == last_act.type and action.params == last_act.params and action.type != "Execute_Test":
                     warning_msg = (
                         "SYSTEM ERROR: You just executed the exact same action with the same parameters! "
                         "DO NOT repeat. Analyze the previous observation and take a NEW action, "
