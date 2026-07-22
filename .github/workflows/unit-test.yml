@@ -13,6 +13,6 @@ jobs:
       
       - name: Install dependencies & run tests
         run: |
-          ppython -m pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install --no-cache-dir -r requirements.txt pytest
           PYTHONPATH=. python -m pytest tests/ -v -k "not integration"
