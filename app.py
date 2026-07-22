@@ -5,22 +5,25 @@ from agentos.core.state import AgentState
 from agentos.tools.toolbox import Toolbox
 from agentos.guardrail.engine import GuardrailEngine
 from agentos.feedback.controller import FeedbackController
-from agentos.security.credentials import load_api_key
 from agentos.llm.real import RealLLMClient
 
-#conda activate agentos
+# 🚨 取消导入原有的 load_api_key，避免云端触发 getpass 死锁
+# from agentos.security.credentials import load_api_key
 
 def run_agent(task: str) -> str:
     if not task.strip():
         return "Please enter a task description."
 
-    try:
-        api_key = load_api_key()
-    except Exception as e:
-        return f"Failed to load API key: {e}"
+    # 👇 核心修改 1：安全、非阻塞地获取 API Key
+    # 优先读取魔搭设置里的 LLM_API_KEY，如果没有再尝试 OPENAI_API_KEY
+    api_key = os.getenv("LLM_API_KEY") or os.getenv("OPENAI_API_KEY")
+    
+    if not api_key:
+        return "❌ Agent Terminated: 未找到 API Key。请在魔搭的设置 -> 环境变量中配置 LLM_API_KEY。"
 
     workspace = os.path.abspath(".")
     try:
+        # 因为你的 RealLLMClient 里已经硬编码了 njusehub.info 的 base_url，所以这里直接传 key 即可
         llm = RealLLMClient(api_key=api_key)
         toolbox = Toolbox(workspace=workspace)
         guardrail = GuardrailEngine(workspace=workspace)
@@ -58,4 +61,5 @@ with gr.Blocks(title="AgentOS") as demo:
     run_btn.click(fn=run_agent, inputs=task_input, outputs=output)
 
 if __name__ == "__main__":
-    demo.launch(server_name="127.0.0.1", server_port=7860, share=False)
+    # 👇 核心修改 2：将 127.0.0.1 改为 0.0.0.0，打通容器的网络壁垒
+    demo.launch(server_name="0.0.0.0", server_port=7860, share=False)
