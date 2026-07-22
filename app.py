@@ -8,6 +8,7 @@ from agentos.feedback.controller import FeedbackController
 from agentos.security.credentials import load_api_key
 from agentos.llm.real import RealLLMClient
 
+#conda activate agentos
 
 def run_agent(task: str) -> str:
     if not task.strip():
@@ -57,4 +58,4 @@ with gr.Blocks(title="AgentOS") as demo:
     run_btn.click(fn=run_agent, inputs=task_input, outputs=output)
 
 if __name__ == "__main__":
-    demo.launch(css="footer {visibility: hidden}")
+    demo.launch(server_name="127.0.0.1", server_port=7860, share=False)
