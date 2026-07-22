@@ -1,6 +1,7 @@
 unit-test:
   image: python:3.12-slim
   before_script:
-    - pip install --no-cache-dir . pytest
+    - python -m pip install --upgrade pip
+    - pip install --no-cache-dir -r requirements.txt pytest
   script:
-    - python -m pytest tests/ -v -k "not integration"
+    - PYTHONPATH=. python -m pytest tests/ -v -k "not integration"
